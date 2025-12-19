@@ -40,6 +40,8 @@ dev = [
 Homepage = "https://github.com/jay/lir"
 Repository = "https://github.com/jay/lir"
 Documentation = "https://github.com/jay/lir#readme"
+Issues = "https://github.com/jay/lir/issues"
+Changelog = "https://github.com/jay/lir/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["."]
