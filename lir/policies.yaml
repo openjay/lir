@@ -1,0 +1,101 @@
+# LIR Policies Configuration
+# 
+# Three default profiles for different use cases:
+# - silent: Minimal fan noise, lower throughput
+# - balanced: Good balance of performance and thermal management
+# - performance: Maximum throughput, higher fan activity
+#
+# Usage:
+#   client = LIRClient(policy="balanced")
+#   client.set_policy("silent")  # Change at runtime
+
+version: "1.0"
+
+policies:
+  # Silent Mode: Minimize fan noise
+  # Use for: Working in quiet environments, battery mode, background tasks
+  silent:
+    max_concurrent_requests: 1
+    max_tokens_inflight: 4096
+    batch_window_ms: 100
+    max_batch_size: 5
+    thermal_policy: conservative
+    description: "Minimal concurrency, long batching window, aggressive thermal limits"
+    
+  # Balanced Mode: Default, good for most use cases
+  # Use for: Daily development, pre-commit checks, general usage
+  balanced:
+    max_concurrent_requests: 3
+    max_tokens_inflight: 8192
+    batch_window_ms: 40
+    max_batch_size: 10
+    thermal_policy: normal
+    description: "Moderate concurrency, standard batching, normal thermal limits"
+    
+  # Performance Mode: Maximum throughput
+  # Use for: CI/CD pipelines, batch processing, when plugged in
+  performance:
+    max_concurrent_requests: 6
+    max_tokens_inflight: 16384
+    batch_window_ms: 20
+    max_batch_size: 20
+    thermal_policy: aggressive
+    description: "High concurrency, short batching window, relaxed thermal limits"
+
+# Thermal policies referenced above
+thermal_policies:
+  conservative:
+    cool_threshold: 40.0      # Below this = COOL
+    warm_threshold: 60.0      # Below this = WARM
+    hot_threshold: 75.0       # Below this = HOT, above = CRITICAL
+    freq_throttle_ratio: 0.9  # CPU frequency throttling detection
+    warm_concurrent_factor: 0.8
+    hot_concurrent_factor: 0.3
+    critical_concurrent_factor: 0.0
+    hot_cooldown: 2.0
+    critical_cooldown: 5.0
+    
+  normal:
+    cool_threshold: 50.0
+    warm_threshold: 70.0
+    hot_threshold: 85.0
+    freq_throttle_ratio: 0.9
+    warm_concurrent_factor: 1.0
+    hot_concurrent_factor: 0.5
+    critical_concurrent_factor: 0.0
+    hot_cooldown: 1.0
+    critical_cooldown: 3.0
+    
+  aggressive:
+    cool_threshold: 60.0
+    warm_threshold: 80.0
+    hot_threshold: 95.0
+    freq_throttle_ratio: 0.85
+    warm_concurrent_factor: 1.0
+    hot_concurrent_factor: 0.7
+    critical_concurrent_factor: 0.3
+    hot_cooldown: 0.5
+    critical_cooldown: 1.0
+
+# Provider configuration
+providers:
+  ollama:
+    base_url: "http://localhost:11434"
+    model: "qwen3:8b"
+    priority: 1
+    timeout: 60.0
+    max_retries: 3
+    
+  lm_studio:
+    base_url: "http://localhost:1234"
+    model: "local-model"
+    priority: 2
+    timeout: 60.0
+    max_retries: 3
+
+# Default settings
+defaults:
+  policy: balanced
+  prefer_fast_when_hot: true
+  max_queue_depth: 100
+
