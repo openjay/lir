@@ -180,7 +180,7 @@ Business Code
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.11+
 - aiohttp >= 3.9.0
 - psutil >= 5.9.0
 - PyYAML >= 6.0

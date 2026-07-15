@@ -70,6 +70,11 @@ N/A - Initial release
 
 ## [Unreleased]
 
+### Changed
+
+- Minimum supported Python raised from 3.10 to **3.11** (`requires-python = ">=3.11"`) as part of the 2026-07-15 server-wide version alignment; removed the 3.10 trove classifier and updated the README requirement line
+- `.python-version` (pinned to 3.11) is now tracked — removed the ignore rule from `.gitignore`
+
 ### Planned for v0.2.0
 
 - Enhanced observability (metrics export, tracing)
